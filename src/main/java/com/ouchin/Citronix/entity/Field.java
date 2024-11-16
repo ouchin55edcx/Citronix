@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "fields")
@@ -41,4 +43,7 @@ public class Field {
     @ManyToOne
     @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
+
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tree> trees = new ArrayList<>();
 }
