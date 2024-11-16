@@ -1,6 +1,5 @@
 package com.ouchin.Citronix.mapper;
 
-
 import com.ouchin.Citronix.dto.request.FarmRequestDTO;
 import com.ouchin.Citronix.dto.respense.FarmResponseDTO;
 import com.ouchin.Citronix.entity.Farm;
