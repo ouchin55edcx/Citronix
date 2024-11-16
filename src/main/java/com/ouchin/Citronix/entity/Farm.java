@@ -1,6 +1,5 @@
 package com.ouchin.Citronix.entity;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
