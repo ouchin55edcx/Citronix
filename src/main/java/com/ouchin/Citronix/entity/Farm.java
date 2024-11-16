@@ -6,10 +6,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "farms")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder    
 public class Farm {
 
     @Id
@@ -33,5 +42,5 @@ public class Farm {
     @PastOrPresent(message = "The date must be in the past or in the present ")
     @Column(nullable = false)
     private LocalDate creationDate;
-    
+
 }
