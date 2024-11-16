@@ -34,5 +34,5 @@ public class HarvestDetails {
     @NotNull(message = "Quantity required")
     @PositiveOrZero
     private Double quantity;
-    
+
 }
