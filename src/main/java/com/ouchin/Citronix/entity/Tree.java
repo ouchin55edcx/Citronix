@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "trees")
@@ -22,7 +24,7 @@ public class Tree {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "La date de plantation est obligatoire")
+    @NotNull(message = "Planting date is required ")
     @Column(name = "planting_date", nullable = false)
     private LocalDate plantingDate;
 
@@ -30,4 +32,8 @@ public class Tree {
     @JoinColumn(name = "field_id", nullable = false)
     @NotNull
     private Field field;
+
+    @OneToMany(mappedBy = "tree", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<HarvestDetails> harvestDetails = new ArrayList<>();
 }
