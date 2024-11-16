@@ -5,4 +5,6 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Citronix is a comprehensive farm management system designed specifically for lemon farms, enabling efficient tracking of production, harvesting, and sales processes.
-# Citronix
+
+## Class Diagram
+![class_diagramme.png](src/main/java/com/ouchin/Citronix/docs/class_diagramme.png)
