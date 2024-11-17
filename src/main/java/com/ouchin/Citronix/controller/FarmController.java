@@ -25,8 +25,8 @@ public class FarmController {
 
     @Operation(
             summary = "Retrieve all farms",
-            description = "Get a list of all farms in the system.",
-            tags = { "farm", "get" })
+            description = "Get a list of all farms in the system."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval of farms",
                     content = @Content(schema = @Schema(implementation = FarmResponseDTO.class))),
@@ -41,8 +41,8 @@ public class FarmController {
 
     @Operation(
             summary = "Get a farm by ID",
-            description = "Retrieve a specific farm using its ID.",
-            tags = { "farm", "get" })
+            description = "Retrieve a specific farm using its ID."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval of farm",
                     content = @Content(schema = @Schema(implementation = FarmResponseDTO.class))),
@@ -58,10 +58,11 @@ public class FarmController {
         return ResponseEntity.ok(farm);
     }
 
+
     @Operation(
             summary = "Create a new farm",
-            description = "Create a new farm with the provided details.",
-            tags = { "farm", "post" })
+            description = "Create a new farm with the provided details."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Farm created successfully",
                     content = @Content(schema = @Schema(implementation = FarmResponseDTO.class))),
@@ -74,10 +75,11 @@ public class FarmController {
         return new ResponseEntity<>(createdFarm, HttpStatus.CREATED);
     }
 
+
     @Operation(
             summary = "Update a farm",
-            description = "Update an existing farm's details by its ID.",
-            tags = { "farm", "put" })
+            description = "Update an existing farm's details by its ID."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Farm updated successfully",
                     content = @Content(schema = @Schema(implementation = FarmResponseDTO.class))),
@@ -85,24 +87,19 @@ public class FarmController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
     @PutMapping("/{id}")
     public ResponseEntity<FarmResponseDTO> updateFarm(
             @PathVariable Long id,
             @RequestBody FarmRequestDTO farmRequestDTO) {
-        try {
-            FarmResponseDTO updatedFarm = farmService.update(id, farmRequestDTO);
-            return ResponseEntity.ok(updatedFarm);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        FarmResponseDTO updatedFarm = farmService.update(id, farmRequestDTO);
+        return ResponseEntity.ok(updatedFarm);
     }
 
 
     @Operation(
             summary = "Delete a farm",
-            description = "Delete a farm by its ID.",
-            tags = { "farm", "delete" })
+            description = "Delete a farm by its ID."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Farm deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Farm not found"),
@@ -110,12 +107,30 @@ public class FarmController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
-        try {
-            farmService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        farmService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+    @Operation(
+            summary = "Search a farms",
+            description = "Search a farm by name or location "
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Search results found",
+                    content = @Content(schema = @Schema(implementation = FarmResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<FarmResponseDTO>> searchFarms(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location
+    ) {
+        List<FarmResponseDTO> farms = farmService.findFarmsByCriteria(name, location);
+        return ResponseEntity.ok(farms);
     }
 
 

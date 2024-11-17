@@ -13,11 +13,13 @@ Citronix is a comprehensive farm management system designed specifically for lem
 ### Farm Management
 
 ```http
-GET     /api/farms
-GET     /api/farms/{id}
-POST    /api/farms
-PUT     /api/farms/{id}
-DELETE  /api/farms/{id}
+GET     /api/v1/farms                # Get all farms
+GET     /api/v1/farms/{id}           # Get farm by ID
+POST    /api/v1/farms                # Create new farm
+PUT     /api/v1/farms/{id}           # Update farm
+DELETE  /api/v1/farms/{id}           # Delete farm
+GET     /api/v1/farms/search         # Search farms by criteria
+
 ```
 
 ### API Documentation UI
