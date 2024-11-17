@@ -20,8 +20,7 @@ public class OpenAPIConfig {
 
         Contact contact = new Contact();
         contact.setEmail("ouchinmustapha82@gmail.com");
-
-
+        contact.setName("Mustapha Ouchin");
 
         Info info = new Info()
                 .title("Farm Management API")
