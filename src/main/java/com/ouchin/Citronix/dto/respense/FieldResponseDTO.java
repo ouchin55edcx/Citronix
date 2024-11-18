@@ -10,5 +10,4 @@ public class FieldResponseDTO {
     private String name;
     private Double area;
     private LocalDate creationDate;
-    private FarmResponseDTO farm;
 }

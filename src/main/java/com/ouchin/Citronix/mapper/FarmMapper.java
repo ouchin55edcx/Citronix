@@ -4,15 +4,16 @@ import com.ouchin.Citronix.dto.request.FarmRequestDTO;
 import com.ouchin.Citronix.dto.respense.FarmResponseDTO;
 import com.ouchin.Citronix.entity.Farm;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-@Component
 public interface FarmMapper {
-
+    @Mapping(target = "fields", source = "fields")
+    @Mapping(target = "fieldsTotalArea", expression = "java(farm.calculateFieldsTotalArea())")
+    @Mapping(target = "availableArea", expression = "java(farm.getAvailableArea())")
     FarmResponseDTO toResponseDTO(Farm farm);
 
     List<FarmResponseDTO> toResponseDTOs(List<Farm> farms);
@@ -20,5 +21,4 @@ public interface FarmMapper {
     Farm toEntity(FarmRequestDTO farmRequestDTO);
 
     void updateFarmFromDto(FarmRequestDTO farmRequestDto, @MappingTarget Farm farm);
-
 }

@@ -28,7 +28,7 @@ public class Field {
 
     @NotNull(message = "Name is required")
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @NotNull(message = "Area is required ")
@@ -44,6 +44,6 @@ public class Field {
     @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
 
-    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Tree> trees = new ArrayList<>();
 }

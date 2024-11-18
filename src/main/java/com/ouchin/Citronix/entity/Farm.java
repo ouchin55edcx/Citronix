@@ -44,13 +44,23 @@ public class Farm {
     @Column(nullable = false)
     private LocalDate creationDate;
 
-
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
     private List<Field> fields = new ArrayList<>();
 
-    public double getTotalArea() {
+
+    @Transient
+    public Double calculateFieldsTotalArea() {
+        if (fields == null || fields.isEmpty()) {
+            return 0.0;
+        }
         return fields.stream()
                 .mapToDouble(Field::getArea)
                 .sum();
     }
+
+    @Transient
+    public Double getAvailableArea() {
+        return totalArea - calculateFieldsTotalArea();
+    }
+
 }
