@@ -19,6 +19,8 @@ public class TreeResponseDTO {
     private String productivityCategory;
     private Double expectedYieldPerSeason;
 
+
+
     public void calculateAgeAndProductivity() {
         this.age = (int) ChronoUnit.YEARS.between(this.plantingDate, LocalDate.now());
 
@@ -35,5 +37,9 @@ public class TreeResponseDTO {
             this.productivityCategory = "Non-Productive";
             this.expectedYieldPerSeason = 0.0;
         }
+
     }
+
+
 }
+

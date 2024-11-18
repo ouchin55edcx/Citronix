@@ -29,21 +29,29 @@ public class TreeServiceImpl implements TreeService {
     private final TreeMapper treeMapper;
     private final FieldRepository fieldRepository;
 
+
     @Override
     public List<TreeResponseDTO> findAll() {
-        return treeRepository.findAll()
-                .stream()
-                .map(treeMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
+        List<Tree> trees = treeRepository.findAll();
 
+        List<TreeResponseDTO> responseDTOs = trees.stream()
+                .map(tree -> {
+                    TreeResponseDTO responseDTO = treeMapper.toResponseDTO(tree);
+                    responseDTO.calculateAgeAndProductivity();
+                    return responseDTO;
+                })
+                .collect(Collectors.toList());
+
+        return responseDTOs;
+    }
 
     @Override
     public TreeResponseDTO findById(Long id) {
-        return treeRepository.findById(id)
-                .map(treeMapper::toResponseDTO)
-                .orElseThrow(() -> new EntityNotFoundException("Tree not found with id: " + id));
-
+        Tree tree = treeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tree not found with ID: " + id));
+        TreeResponseDTO responseDTO = treeMapper.toResponseDTO(tree);
+        responseDTO.calculateAgeAndProductivity();
+        return responseDTO;
     }
 
     @Override
