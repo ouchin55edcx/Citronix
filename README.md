@@ -28,6 +28,16 @@ POST    /api/v1/fields                # Create new field
 PUT     /api/v1/fields/{id}           # Update field
 DELETE  /api/v1/fields/{id}           # Delete field
 ```
+### Tree Management
+
+```http
+GET     /api/v1/trees                 # Get all trees
+GET     /api/v1/trees/{id}            # Get tree by ID
+POST    /api/v1/trees                 # Create new tree
+PUT     /api/v1/trees/{id}            # Update tree
+DELETE  /api/v1/trees/{id}            # Delete tree
+```
+
 
 ### API Documentation UI
 - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
