@@ -1,5 +1,3 @@
-Here's the content formatted as a `.md` file that you can directly use. Just copy and paste this into your README.md file:
-
 # 🍋 Citronix - Lemon Farm Management System
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.java.net/projects/jdk/17/)
@@ -19,7 +17,16 @@ POST    /api/v1/farms                # Create new farm
 PUT     /api/v1/farms/{id}           # Update farm
 DELETE  /api/v1/farms/{id}           # Delete farm
 GET     /api/v1/farms/search         # Search farms by criteria
+```
 
+### Field Management
+
+```http
+GET     /api/v1/fields                # Get all fields
+GET     /api/v1/fields/{id}           # Get field by ID
+POST    /api/v1/fields                # Create new field
+PUT     /api/v1/fields/{id}           # Update field
+DELETE  /api/v1/fields/{id}           # Delete field
 ```
 
 ### API Documentation UI
@@ -28,6 +35,7 @@ GET     /api/v1/farms/search         # Search farms by criteria
 
 ## Class Diagram
 ![class_diagramme.png.png](docs/class_diagramme.png.png)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
