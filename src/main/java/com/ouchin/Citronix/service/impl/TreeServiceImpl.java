@@ -34,15 +34,13 @@ public class TreeServiceImpl implements TreeService {
     public List<TreeResponseDTO> findAll() {
         List<Tree> trees = treeRepository.findAll();
 
-        List<TreeResponseDTO> responseDTOs = trees.stream()
+        return trees.stream()
                 .map(tree -> {
                     TreeResponseDTO responseDTO = treeMapper.toResponseDTO(tree);
                     responseDTO.calculateAgeAndProductivity();
                     return responseDTO;
                 })
                 .collect(Collectors.toList());
-
-        return responseDTOs;
     }
 
     @Override
@@ -53,6 +51,8 @@ public class TreeServiceImpl implements TreeService {
         responseDTO.calculateAgeAndProductivity();
         return responseDTO;
     }
+
+    //ToDO : Espacement entre les arbres : Chaque champ doit contenir un nombre d'arbres tel que la densité maximale est de 100 arbres par hectare (10 arbres par 1 000 m²).
 
     @Override
     public TreeResponseDTO create(TreeRequestDTO treeRequestDTO) {
