@@ -37,6 +37,26 @@ POST    /api/v1/trees                 # Create new tree
 PUT     /api/v1/trees/{id}            # Update tree
 DELETE  /api/v1/trees/{id}            # Delete tree
 ```
+### Harvest Management
+
+```http
+GET     /api/v1/harvests              # Get all harvests
+GET     /api/v1/harvests/{id}         # Get harvest by ID
+POST    /api/v1/harvests              # Create new harvest
+PUT     /api/v1/harvests/{id}         # Update harvest
+DELETE  /api/v1/harvests/{id}         # Delete harvest
+
+```
+### Harvest Details Management
+
+```http
+GET     /api/v1/harvest-details               # Get all harvest details
+GET     /api/v1/harvest-details/{id}          # Get harvest details by ID
+POST    /api/v1/harvest-details               # Create new harvest details
+PUT     /api/v1/harvest-details/{harvestId}/{treeId}  # Update harvest details by harvestId and treeId
+DELETE  /api/v1/harvest-details/{harvestId}/{treeId}  # Delete harvest details by harvestId and treeId
+
+```
 
 
 ### API Documentation UI
@@ -44,8 +64,7 @@ DELETE  /api/v1/trees/{id}            # Delete tree
 - OpenAPI Spec: `http://localhost:8080/v3/api-docs`
 
 ## Class Diagram
-![class_diagramme.png.png](docs/class_diagramme.png.png)
-
+![class_diagramme.png](docs/class_diagramme.png)
 ## 🚀 Getting Started
 
 ### Prerequisites
