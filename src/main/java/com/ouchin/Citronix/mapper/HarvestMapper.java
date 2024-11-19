@@ -29,7 +29,5 @@ public interface HarvestMapper {
 
     HarvestDetails toEntity(HarvestDetailsRequestDTO requestDTO);
 
-    List<HarvestResponseDTO> toHarvestResponseDTOList(List<Harvest> harvests);
-
     List<HarvestDetailsResponseDTO> toHarvestDetailsResponseDTOList(List<HarvestDetails> details);
 }
