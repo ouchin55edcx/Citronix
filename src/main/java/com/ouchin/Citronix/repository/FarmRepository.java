@@ -11,11 +11,4 @@ import java.util.List;
 
 @Repository
 public interface FarmRepository extends JpaRepository<Farm, Long> {
-
-
-    @Query("SELECT f FROM Farm f WHERE (:name IS NULL OR f.name LIKE CONCAT('%', :name, '%')) AND (:location IS NULL OR f.location LIKE CONCAT('%', :location, '%'))")
-    List<Farm> findFarmsByCriteria(
-            @Param("name") String name,
-            @Param("location") String location
-    );
 }

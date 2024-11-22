@@ -66,8 +66,7 @@ public class FarmController {
     @GetMapping("/search")
     public ResponseEntity<List<FarmResponseDTO>> searchFarms(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String location
-    ) {
+            @RequestParam(required = false) String location) {
         List<FarmResponseDTO> farms = farmService.findFarmsByCriteria(name, location);
         return ResponseEntity.ok(farms);
     }
