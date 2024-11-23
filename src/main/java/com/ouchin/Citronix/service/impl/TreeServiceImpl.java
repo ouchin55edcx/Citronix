@@ -8,6 +8,7 @@ import com.ouchin.Citronix.mapper.TreeMapper;
 import com.ouchin.Citronix.repository.FieldRepository;
 import com.ouchin.Citronix.repository.TreeRepository;
 import com.ouchin.Citronix.service.TreeService;
+import com.ouchin.Citronix.service.validation.TreeValidator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -22,24 +23,17 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-
 public class TreeServiceImpl implements TreeService {
 
     private final TreeRepository treeRepository;
     private final TreeMapper treeMapper;
     private final FieldRepository fieldRepository;
-
+    private final TreeValidator treeValidator;
 
     @Override
     public List<TreeResponseDTO> findAll() {
-        List<Tree> trees = treeRepository.findAll();
-
-        return trees.stream()
-                .map(tree -> {
-                    TreeResponseDTO responseDTO = treeMapper.toResponseDTO(tree);
-                    responseDTO.calculateAgeAndProductivity();
-                    return responseDTO;
-                })
+        return treeRepository.findAll().stream()
+                .map(treeMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -47,16 +41,12 @@ public class TreeServiceImpl implements TreeService {
     public TreeResponseDTO findById(Long id) {
         Tree tree = treeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tree not found with ID: " + id));
-        TreeResponseDTO responseDTO = treeMapper.toResponseDTO(tree);
-        responseDTO.calculateAgeAndProductivity();
-        return responseDTO;
+        return treeMapper.toResponseDTO(tree);
     }
-
-    //ToDO : Espacement entre les arbres : Chaque champ doit contenir un nombre d'arbres tel que la densité maximale est de 100 arbres par hectare (10 arbres par 1 000 m²).
 
     @Override
     public TreeResponseDTO create(TreeRequestDTO treeRequestDTO) {
-        validateTreeRequest(treeRequestDTO);
+        treeValidator.validateTreeRequest(treeRequestDTO);
 
         Field field = fieldRepository.findById(treeRequestDTO.getFieldId())
                 .orElseThrow(() -> new IllegalArgumentException("Field not found with ID: " + treeRequestDTO.getFieldId()));
@@ -66,15 +56,12 @@ public class TreeServiceImpl implements TreeService {
 
         Tree savedTree = treeRepository.save(tree);
 
-        TreeResponseDTO responseDTO = treeMapper.toResponseDTO(savedTree);
-        responseDTO.calculateAgeAndProductivity();
-
-        return responseDTO;
+        return treeMapper.toResponseDTO(savedTree);
     }
 
     @Override
     public TreeResponseDTO update(Long id, TreeRequestDTO treeRequestDTO) {
-        validateTreeRequest(treeRequestDTO);
+        treeValidator.validateTreeRequest(treeRequestDTO);
 
         Tree existingTree = treeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tree not found with ID: " + id));
@@ -87,27 +74,13 @@ public class TreeServiceImpl implements TreeService {
 
         Tree updatedTree = treeRepository.save(existingTree);
 
-        TreeResponseDTO responseDTO = treeMapper.toResponseDTO(updatedTree);
-        responseDTO.calculateAgeAndProductivity();
-
-        return responseDTO;
+        return treeMapper.toResponseDTO(updatedTree);
     }
 
     @Override
     public void delete(Long id) {
         Tree tree = treeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tree not found with id: " + id));
-
+                .orElseThrow(() -> new EntityNotFoundException("Tree not found with ID: " + id));
         treeRepository.delete(tree);
-    }
-
-    private void validateTreeRequest(TreeRequestDTO treeRequestDTO) {
-        if (!treeRequestDTO.isValidPlantingPeriod()) {
-            throw new IllegalArgumentException("Trees can only be planted between March and May");
-        }
-
-        if (!treeRequestDTO.isValidTreeAge()) {
-            throw new IllegalArgumentException("Tree age must not exceed 20 years");
-        }
     }
 }

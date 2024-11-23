@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.temporal.ChronoUnit;
 
 @Data
 @Builder
@@ -26,16 +25,9 @@ public class TreeRequestDTO {
     private Long fieldId;
 
     @AssertTrue(message = "Trees can only be planted between March and May")
-    public boolean isValidPlantingPeriod() {
+    public boolean isValidPlantingSeason() {
         if (plantingDate == null) return false;
-
         Month month = plantingDate.getMonth();
-        return month == Month.MARCH ||
-                month == Month.MAY;
-    }
-
-    public boolean isValidTreeAge() {
-        long age = ChronoUnit.YEARS.between(plantingDate, LocalDate.now());
-        return age <= 20;
+        return month == Month.MARCH || month == Month.APRIL || month == Month.MAY;
     }
 }

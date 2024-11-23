@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Tree {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Planting date is required ")
+    @NotNull(message = "Planting date is required")
     @Column(name = "planting_date", nullable = false)
     private LocalDate plantingDate;
 
@@ -36,4 +37,10 @@ public class Tree {
     @OneToMany(mappedBy = "tree", cascade = CascadeType.ALL)
     @Builder.Default
     private List<HarvestDetails> harvestDetails = new ArrayList<>();
+
+    public boolean isProductive() {
+        int age = Period.between(plantingDate, LocalDate.now()).getYears();
+        return age >= 3 && age <= 20;
+    }
 }
+
