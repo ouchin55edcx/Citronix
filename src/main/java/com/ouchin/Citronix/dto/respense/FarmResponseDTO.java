@@ -1,6 +1,5 @@
 package com.ouchin.Citronix.dto.respense;
 
-import com.ouchin.Citronix.entity.Field;
 import lombok.Data;
 
 import java.time.LocalDate;

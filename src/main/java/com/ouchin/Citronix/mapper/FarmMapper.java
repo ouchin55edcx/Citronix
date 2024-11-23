@@ -11,6 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FarmMapper {
+
     @Mapping(target = "fields", source = "fields")
     @Mapping(target = "fieldsTotalArea", expression = "java(farm.calculateFieldsTotalArea())")
     @Mapping(target = "availableArea", expression = "java(farm.getAvailableArea())")
