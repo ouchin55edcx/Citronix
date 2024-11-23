@@ -8,6 +8,7 @@ import com.ouchin.Citronix.mapper.FieldMapper;
 import com.ouchin.Citronix.repository.FarmRepository;
 import com.ouchin.Citronix.repository.FieldRepository;
 import com.ouchin.Citronix.service.FieldService;
+import com.ouchin.Citronix.service.validation.FieldValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class FieldServiceImpl implements FieldService {
     private final FieldRepository fieldRepository;
     private final FarmRepository farmRepository;
     private final FieldMapper fieldMapper;
+    private final FieldValidator fieldValidator;
 
     @Override
     @Transactional(readOnly = true)
@@ -45,81 +47,37 @@ public class FieldServiceImpl implements FieldService {
     @Override
     @Transactional
     public FieldResponseDTO create(FieldRequestDTO fieldRequestDTO) {
-        // Find the farm
         Farm farm = farmRepository.findById(fieldRequestDTO.getFarmId())
                 .orElseThrow(() -> new EntityNotFoundException("Farm not found with id: " + fieldRequestDTO.getFarmId()));
 
-        // Validate if the new field's area meets the minimum requirement (1,000 m²)
-        if (fieldRequestDTO.getArea() < 1000) {
-            throw new IllegalArgumentException("Field area must be at least 1,000 m²");
-        }
-
-        // Validate if the new field's area exceeds 50% of the farm's total area
-        if (fieldRequestDTO.getArea() > farm.getTotalArea() * 0.5) {
-            throw new IllegalArgumentException("Field area cannot exceed 50% of the farm's total area");
-        }
-
-        // Validate if the new field's area doesn't exceed farm's remaining area
-        double currentFieldsArea = farm.calculateFieldsTotalArea();
-        if (currentFieldsArea + fieldRequestDTO.getArea() > farm.getTotalArea()) {
-            throw new IllegalArgumentException("Total field area would exceed farm's total area");
-        }
-
-        // Validate the maximum number of fields (10 per farm)
-        if (farm.getFields().size() >= 10) {
-            throw new IllegalArgumentException("A farm cannot have more than 10 fields");
-        }
-
-        // Convert DTO to entity
         Field field = fieldMapper.toEntity(fieldRequestDTO);
         field.setCreationDate(LocalDate.now());
         field.setFarm(farm);
 
-        // Save and return
+        fieldValidator.validateFieldCreation(field, farm);
+
         Field savedField = fieldRepository.save(field);
         return fieldMapper.toResponseDTO(savedField);
     }
 
-
     @Override
     @Transactional
     public FieldResponseDTO update(Long id, FieldRequestDTO fieldRequestDTO) {
-        // Find existing field
         Field existingField = fieldRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Field not found with id: " + id));
 
-        // Find the farm
         Farm farm = farmRepository.findById(fieldRequestDTO.getFarmId())
                 .orElseThrow(() -> new EntityNotFoundException("Farm not found with id: " + fieldRequestDTO.getFarmId()));
 
-        // Calculate total area excluding the current field
-        double totalAreaExcludingCurrent = farm.calculateFieldsTotalArea() - existingField.getArea();
-
-        // Validate minimum field size (1,000 m²)
-        if (fieldRequestDTO.getArea() < 1000) {
-            throw new IllegalArgumentException("Field area must be at least 1,000 m²");
-        }
-
-        // Validate if the new area exceeds 50% of the farm's total area
-        if (fieldRequestDTO.getArea() > farm.getTotalArea() * 0.5) {
-            throw new IllegalArgumentException("Field area cannot exceed 50% of the farm's total area");
-        }
-
-        // Validate if the total area (excluding current field) plus the new area exceeds the farm's total area
-        if (totalAreaExcludingCurrent + fieldRequestDTO.getArea() > farm.getTotalArea()) {
-            throw new IllegalArgumentException("Updated field area would exceed farm's total area");
-        }
-
-        // Update field attributes
         existingField.setName(fieldRequestDTO.getName());
         existingField.setArea(fieldRequestDTO.getArea());
         existingField.setFarm(farm);
 
-        // Save and return
+        fieldValidator.validateFieldUpdate(existingField, farm);
+
         Field updatedField = fieldRepository.save(existingField);
         return fieldMapper.toResponseDTO(updatedField);
     }
-
 
     @Override
     @Transactional
