@@ -6,7 +6,6 @@ import com.ouchin.Citronix.entity.Harvest;
 import com.ouchin.Citronix.entity.HarvestDetails;
 import com.ouchin.Citronix.entity.Tree;
 import com.ouchin.Citronix.entity.embedded.HarvestDetailsId;
-import com.ouchin.Citronix.entity.enums.Season;
 import com.ouchin.Citronix.mapper.HarvestMapper;
 import com.ouchin.Citronix.repository.HarvestDetailsRepository;
 import com.ouchin.Citronix.repository.HarvestRepository;
@@ -17,8 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 @Service
@@ -30,7 +27,6 @@ public class HarvestDetailsServiceImpl implements HarvestDetailsService {
     private final HarvestRepository harvestRepository;
     private final TreeRepository treeRepository;
     private final HarvestMapper harvestDetailsMapper;
-
 
     @Override
     public List<HarvestDetailsResponseDTO> findAll() {
@@ -62,19 +58,26 @@ public class HarvestDetailsServiceImpl implements HarvestDetailsService {
                 .quantity(requestDTO.getQuantity())
                 .build();
 
+        harvest.setTotalQuantity(harvest.getTotalQuantity() + requestDTO.getQuantity());
+        harvestRepository.save(harvest);
+
         HarvestDetails savedDetails = harvestDetailsRepository.save(details);
 
         return harvestDetailsMapper.toResponseDTO(savedDetails);
     }
+
 
     @Override
     public HarvestDetailsResponseDTO update(HarvestDetailsId id, HarvestDetailsRequestDTO requestDTO) {
         HarvestDetails existingDetails = harvestDetailsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Harvest details not found"));
 
+        Harvest harvest = existingDetails.getHarvest();
+
         double quantityDifference = requestDTO.getQuantity() - existingDetails.getQuantity();
 
-        updateHarvestTotalQuantity(existingDetails.getHarvest(), quantityDifference);
+        harvest.setTotalQuantity(harvest.getTotalQuantity() + quantityDifference);
+        harvestRepository.save(harvest);
 
         existingDetails.setQuantity(requestDTO.getQuantity());
         existingDetails = harvestDetailsRepository.save(existingDetails);
@@ -87,19 +90,15 @@ public class HarvestDetailsServiceImpl implements HarvestDetailsService {
         HarvestDetails details = harvestDetailsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Harvest details not found"));
 
-        updateHarvestTotalQuantity(details.getHarvest(), -details.getQuantity());
+        Harvest harvest = details.getHarvest();
+
+        harvest.setTotalQuantity(harvest.getTotalQuantity() - details.getQuantity());
+        harvestRepository.save(harvest);
 
         harvestDetailsRepository.delete(details);
     }
 
-    private void updateHarvestTotalQuantity(Harvest harvest, double quantityChange) {
-        double newTotal = harvest.getTotalQuantity() + quantityChange;
-        if (newTotal < 0) {
-            throw new IllegalArgumentException("Total harvest quantity cannot be negative");
-        }
-        harvest.setTotalQuantity(newTotal);
-        harvestRepository.save(harvest);
-    }
 }
+
 
 

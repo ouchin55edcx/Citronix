@@ -61,14 +61,13 @@ DELETE  /api/v1/harvest-details/{harvestId}/{treeId}  # Delete harvest details b
 
 ### API Documentation UI
 - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
-- OpenAPI Spec: `http://localhost:8080/v3/api-docs`
 
 ## Class Diagram
 ![class_diagramme.png](docs/class_diagramme.png)
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Java 17
+- Java 17   
 - Maven
 - Your favorite IDE (IntelliJ IDEA recommended)
 

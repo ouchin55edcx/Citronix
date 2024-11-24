@@ -34,12 +34,33 @@ public class Harvest {
     @Enumerated(EnumType.STRING)
     private Season season;
 
-    @NotNull(message = "Total quantity required")
     @PositiveOrZero
-    @Column(name = "total_quantity", nullable = false)
+    @Column(name = "total_quantity", nullable = true)
     private Double totalQuantity;
 
     @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL)
     private List<HarvestDetails> harvestDetails = new ArrayList<>();
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

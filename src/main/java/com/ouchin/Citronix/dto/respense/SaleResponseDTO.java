@@ -15,10 +15,11 @@ public class SaleResponseDTO {
     private Long id;
     private Double prixUnitaire;
     private LocalDate saleDate;
-    private Double quantity;
+    private Double saleQuantity;
     private Double revenue;
     private String clientName;
     private Long harvestId;
     private LocalDate harvestDate;
     private String season;
 }
+

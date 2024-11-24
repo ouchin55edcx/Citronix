@@ -27,22 +27,28 @@ public class SaleServiceImpl implements SaleService {
     @Override
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO requestDTO) {
+        // Map SaleRequestDTO to Sale entity
         Sale sale = saleMapper.toEntity(requestDTO);
 
+        // Fetch the associated Harvest
         Harvest harvest = harvestRepository.findById(requestDTO.getHarvestId())
                 .orElseThrow(() -> new EntityNotFoundException("Harvest not found"));
 
+        // Ensure the requested sale quantity does not exceed available quantity
         if (harvest.getTotalQuantity() < requestDTO.getQuantity()) {
             throw new IllegalArgumentException("Insufficient quantity available in harvest");
         }
 
+        // Set the harvest in the Sale entity
         sale.setHarvest(harvest);
-        harvest.setTotalQuantity(harvest.getTotalQuantity() - requestDTO.getQuantity());
-        harvestRepository.save(harvest);
 
+        // Save the sale entity
         Sale savedSale = saleRepository.save(sale);
+
+        // Map the saved Sale entity to SaleResponseDTO and return it
         return saleMapper.toDTO(savedSale);
     }
+
 
     @Override
     public SaleResponseDTO getSaleById(Long id) {
@@ -97,4 +103,3 @@ public class SaleServiceImpl implements SaleService {
         saleRepository.delete(sale);
     }
 }
-

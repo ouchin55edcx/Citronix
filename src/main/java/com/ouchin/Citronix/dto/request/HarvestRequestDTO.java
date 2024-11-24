@@ -22,7 +22,7 @@ public class HarvestRequestDTO {
     @NotNull(message = "Season is required")
     private Season season;
 
-    @NotNull(message = "Total quantity is required")
+
     @PositiveOrZero(message = "Total quantity cannot be negative")
-    private Double totalQuantity;
+    private Double totalQuantity = 0.0;
 }

@@ -45,4 +45,8 @@ public class Sale {
     @Column(nullable = false)
     private String clientName;
 
+    public Double getRevenue() {
+        return this.quantity * this.prixUnitaire;
+    }
+
 }
